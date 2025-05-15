@@ -9,13 +9,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $datos = Curso::orderBy('id','desc')->get();
+        $datos = Curso::orderBy('id','desc')->paginate(5);
         return view('home', compact('datos'));
     }
 
-    public function show($id){
-        $dato = Curso::find($id);
-        return view('show',compact('dato'));
+    public function show( Curso $curso){
+        //$dato = Curso::find($id);
+      
+        return view('show',compact('curso'));
     }
 
     public function create(){
