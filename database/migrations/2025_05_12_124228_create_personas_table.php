@@ -31,6 +31,7 @@ return new class extends Migration
             $table->boolean('posee_alergia')->default(false);
             $table->string('alergia_detalle', 100)->nullable();
             $table->string('tipo_sangre', 5);
+            $table->string('correo')->unique();
             $table->string('contacto_emergencia_nombre', 100)->nullable();
             $table->string('contacto_emergencia_parentesco', 50)->nullable();
             $table->string('contacto_emergencia_convencional', 20)->nullable();

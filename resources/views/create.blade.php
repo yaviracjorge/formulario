@@ -16,24 +16,42 @@
 
     <div class="bg-white p-6 rounded-lg shadow">
       <h1 class="text-2xl font-bold mb-4 text-gray-900">Crear Curso</h1>
+      {{--
+        Enlista los errores(en este caso campo requeridos).--}}
+      @if($errors->any())
+        <div>
+          <h2>Errors:</h2>
+          <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+              <li class="text-red-600">{{ $error }}</li>
+            @endforeach
+        </div>
+      @endif
+
 
       <form action="{{ route('curso.store') }}" method="POST" class="space-y-4">
         @csrf
 
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Nombre del curso</label>
-          <input type="text" name="name" id="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <input type="text" name="name" id="name" value="{{old('name')}}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
+        {{--
+          Enlista los errores(en este caso campo requeridos).--}}
+        @error('name')
+          <div class="text-red-600 text-sm mt-1">campo requerido</div>
+        @enderror
 
         <div>
           <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-          <input type="text" name="descripcion" id="descripcion" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <input type="text" name="descripcion" id="descripcion" value="{{old('descripcion')}}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
 
         <div>
           <label for="categoria" class="block text-sm font-medium text-gray-700">Categoría</label>
-          <input type="text" name="categoria" id="categoria" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <input type="text" name="categoria" id="categoria" value="{{old('categoria')}}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
+
 
         <div class="pt-4">
           <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-md shadow">

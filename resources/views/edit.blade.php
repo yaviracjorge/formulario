@@ -17,25 +17,34 @@
     <div class="bg-white p-6 rounded-lg shadow">
       <h1 class="text-2xl font-bold mb-4 text-gray-900">Editar Curso</h1>
 
-      <form action="{{ route('curso.update', $dato->id) }}" method="POST" class="space-y-4">
+      {{--Enlista los errores(en este caso campo requeridos).--}}
+      @if($errors->any())
+        <div>
+          <h2>Errors:</h2>
+          <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+              <li class="text-red-600">{{ $error }}</li>
+            @endforeach
+        </div>
+      @endif
+      <form action="{{ route('curso.update', $curso->id) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Nombre del curso</label>
-          <input type="text" name="name" id="name" value="{{ $dato->name }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <input type="text" name="name" id="name" value="{{ old('name',$curso->name) }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
 
         <div>
           <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-          <input type="text" name="descripcion" id="descripcion" value="{{ $dato->descripcion }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <input type="text" name="descripcion" id="descripcion" value="{{ old('descripcion',$curso->descripcion) }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
 
         <div>
           <label for="categoria" class="block text-sm font-medium text-gray-700">Categoría</label>
-          <input type="text" name="categoria" id="categoria" value="{{ $dato->categoria }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+          <input type="text" name="categoria" id="categoria" value="{{ old('categoria',$curso->categoria) }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
-
         <div class="pt-4">
           <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-md shadow">
             Actualizar

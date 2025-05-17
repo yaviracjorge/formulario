@@ -24,26 +24,44 @@ class HomeController extends Controller
     }
 
     public function store(Request $request){
-        $create = new Curso();
+
+        //validacion
+        $request->validate([
+            'name'=> 'required|unique:cursos',
+            'descripcion'=> 'required',
+            'categoria'=> 'required',
+        ]);
+
+        // esta manera se agrega registros de manera masiva
+        Curso::create($request->all());
+        
+        /*$create = new Curso();
         $create->name = $request->name;
         $create->descripcion = $request->descripcion;
         $create->categoria = $request->categoria;
-        $create->save();
+        $create->save();*/
 
         return redirect('/');
     }
 
-    public function edit($dato){
-        $dato = Curso::find($dato);
-        return view('edit',compact('dato'));
+    public function edit(Curso $curso){
+      
+        return view('edit',compact('curso'));
     }
 
-    public function update(Request $request,$dato){
-        $dato = Curso::find($dato);
+    public function update(Request $request,Curso $curso){
+    
+         $request->validate([
+            'name'=> "required|unique:cursos,name,{$curso->id}",
+            'descripcion'=> 'required',
+            'categoria'=> 'required',
+        ]);
+        $curso ->update($request->all());
+        /*$dato = Curso::find($dato);
         $dato->name = $request->name;
         $dato->descripcion = $request->descripcion;
         $dato->categoria = $request->categoria;
-        $dato->save();
+        $dato->save();*/
         return redirect('/');
     }
 }
