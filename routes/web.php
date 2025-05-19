@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Models\Curso;
+use App\Http\Controllers\PersonaoneController;
 
 Route::get('/',[HomeController::class,'index'])->name('home');
+Route::get('/persona/create',[PersonaoneController::class,'create']);
+Route::post('/persona',[PersonaoneController::class,'store']);
 /*Route::get('/curso/create',[HomeController::class,'create'])->name('curso.create');
 Route::post('/curso',[HomeController::class,'store'])->name('curso.store');
 Route::get('/curso/{id}',[HomeController::class,'show'])->name('curso.show');
