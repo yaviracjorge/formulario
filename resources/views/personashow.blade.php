@@ -15,6 +15,11 @@
 
 
         <div class="overflow-x-auto">
+            <a href="{{ route('persona.create')}}">
+                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+                    Crear Empleado
+                </button>
+            </a>
             <table class="min-w-full bg-white border border-gray-300 shadow-sm rounded-lg">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
@@ -85,11 +90,6 @@
                                 <a href="{{ route('persona.show', $dato->id) }}">
                                     <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">
                                         Mostrar
-                                    </button>
-                                </a>
-                                <a href="{{ route('formacion.edit', $dato->id) }}">
-                                    <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
-                                        Editar
                                     </button>
                                 </a>
                             </div>

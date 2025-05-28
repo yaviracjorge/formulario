@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Detalle de Persona</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 p-6">
 
   <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-8">
@@ -46,6 +48,11 @@
       <div><strong>Teléfono Celular:</strong> {{ $persona->telefono_celular ?? ' ' }}</div>
 
       <div class="col-span-2"><strong>Última Empresa:</strong> {{ $persona->ultima_empresa }}</div>
+      <a href="{{ route('formacion.edit', $persona->id) }}">
+        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+          Editar
+        </button>
+      </a>
     </div>
 
     @if($persona->formacion)
@@ -54,6 +61,11 @@
       <div class="grid grid-cols-2 gap-4">
         <div><strong>Nivel:</strong> {{ $persona->formacion->nivel }}</div>
         <div><strong>Título Obtenido:</strong> {{ $persona->formacion->titulo_obtenido }}</div>
+        <a href="{{ route('formacion.edit', $persona->id) }}">
+          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+            Editar
+          </button>
+        </a>
       </div>
     </div>
     @else
@@ -61,7 +73,36 @@
       Esta persona aún no tiene formación académica registrada.
     </div>
     @endif
+
+    <div class="mt-8 border-t pt-6">
+      <h2 class="text-2xl font-bold mb-4 text-blue-600">Proyectos Asignado</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4 border-b pb-2">
+        <div><strong class="text-gray-700">Fecha de Ingreso al Proyecto:</strong> {{ $persona->proyecto_persona?->fecha_ingreso }}</div>
+        <div><strong class="text-gray-700">Proyecto Asignado:</strong> {{ $persona->proyecto_persona?->proyecto->nombre_proyecto }}</div>
+        <div><strong class="text-gray-700">Cargo:</strong> {{ $persona->proyecto_persona?->cargo }}</div>
+        <div><strong class="text-gray-700">Tiempo de Dedicación:</strong> {{ $persona->proyecto_persona?->tiempo_dedicacion }}</div>
+        <div><strong class="text-gray-700">Sucursal:</strong> {{ $persona->proyecto_persona?->sucursal }}</div>
+        <div><strong class="text-gray-700">Lugar de Sufragio:</strong> {{ $persona->proyecto_persona?->lugar_sufragio }}</div>
+        <a href="{{ route('proyecto.edit', $persona->id) }}">
+          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+            Editar
+          </button>
+        </a>
+                <a href="{{ route('proyecto.reasignacion', $persona->id) }}">
+          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+            Asignar Nuevo Proyecto
+          </button>
+        </a>
+        <a href="{{ route('proyecto.historial', $persona->id) }}">
+          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+            Ver Historial
+          </button>
+        </a>
+      </div>
+
+    </div>
   </div>
 
 </body>
+
 </html>

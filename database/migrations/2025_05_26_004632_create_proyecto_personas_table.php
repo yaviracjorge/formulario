@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('fecha_ingreso');
             $table->date('fecha_salida')->nullable();
             $table->string('cargo', 100);
-            $table->string('tiempo_dedicacion', 3);
+            $table->string('tiempo_dedicacion', 5);
             $table->string('sucursal', 100);
             $table->string('lugar_sufragio',100);
             $table->timestamps();
