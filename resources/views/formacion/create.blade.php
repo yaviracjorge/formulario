@@ -47,11 +47,6 @@
                            required>
                 </div>
 
-                <!-- Botones 
-                <div class="flex justify-end space-x-3 pt-4">
-                    <a href="{{ url('/') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition duration-300">
-                        Cancelar
-                    </a>-->
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow-sm transition duration-300">
                         Guardar Formación
                     </button>

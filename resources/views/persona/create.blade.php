@@ -11,8 +11,11 @@
 <body class="bg-gray-50 font-sans text-gray-800">
 
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+        <a href="{{ route('home') }}" class="inline-block mb-4 text-indigo-600 hover:underline">
+            ← Volver al inicio
+        </a>
         <h2 class="text-2xl font-semibold mb-6">Formulario de Persona</h2>
-        <form action="/persona" method="POST" class="space-y-8">
+        <form action="{{ route('persona.store') }}" method="POST" class="space-y-8">
             @csrf
 
             <!-- DATOS PERSONALES -->

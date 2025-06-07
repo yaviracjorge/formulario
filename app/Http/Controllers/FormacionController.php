@@ -19,12 +19,7 @@ class FormacionController extends Controller
  //este metodo crea/guarda la formacion de la persona
   public function store(Request $request)
   {
-    /*dd([
-        'request_all' => $request->all(),
-        'persona_id_request' => $request->persona_id,
-        'persona_id_session' => session('persona_id'),
-        'has_persona_id' => $request->has('persona_id')
-    ]);*/
+
     $request->validate([
       'persona_id' => 'required|exists:personas,id',
     ]);

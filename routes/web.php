@@ -1,14 +1,14 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FormacionController;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\Proyecto;
 use App\Http\Controllers\Proyecto_PersonaController;
 
 
 
 Route::get('/persona/create',[PersonaController::class,'create'])->name('persona.create');
-Route::post('/persona',[PersonaController::class,'store']);
+Route::post('/persona',[PersonaController::class,'store'])->name('persona.store');
 Route::get('/',[PersonaController::class,'index'])->name('home');
 Route::get('/persona/{id}', [PersonaController::class,'show'])->name('persona.show');
 
@@ -30,13 +30,5 @@ Route::get('/proyecto/show',[Proyecto_PersonaController::class,'show'])->name('p
 Route::get('/proyecto/{proyecto_persona}/edit',[Proyecto_PersonaController::class,'edit'])->name('proyecto.edit');
 Route::put('/proyecto/{proyecto_persona}',[Proyecto_PersonaController::class,'update'])->name('proyecto.update');
 
-//Route::put('/proyecto/{proyecto_persona}',[Proyecto_PersonaController::class,'update'])->name('proyecto.update');
-
-/*Route::get('/curso/create',[HomeController::class,'create'])->name('curso.create');
-Route::post('/curso',[HomeController::class,'store'])->name('curso.store');
-Route::get('/curso/{id}',[HomeController::class,'show'])->name('curso.show');
-Route::get('/curso/{id}/edit',[HomeController::class,'edit'])->name('curso.edit');
-Route::put('/curso/{id}',[HomeController::class,'update'])->name('curso.update');*/
-Route::resource('curso', HomeController::class)->only([
-    'create', 'store', 'show', 'edit', 'update'
-]);
+Route::get('/crear_proyecto/create', [Proyecto::class, 'create'])->name('crear_proyecto.create');
+Route::post('/crear_proyecto', [Proyecto::class, 'store'])->name('crear_proyecto.store');

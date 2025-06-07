@@ -10,6 +10,9 @@
 <body class="bg-gray-100 p-6">
 
   <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-8">
+    <a href="{{ route('home') }}" class="inline-block mb-4 text-indigo-600 hover:underline">
+      ← Volver al inicio
+    </a>
     <h1 class="text-3xl font-bold text-center mb-8">Datos de la Persona</h1>
 
     <div class="grid grid-cols-2 gap-4">
@@ -75,30 +78,45 @@
     @endif
 
     <div class="mt-8 border-t pt-6">
-      <h2 class="text-2xl font-bold mb-4 text-blue-600">Proyectos Asignado</h2>
+      <h2 class="text-2xl font-bold mb-4 text-blue-600">Proyecto Actual</h2>
+
+      @if($proyectoActual)
       <div class="grid grid-cols-2 gap-4 mb-4 border-b pb-2">
-        <div><strong class="text-gray-700">Fecha de Ingreso al Proyecto:</strong> {{ $persona->proyecto_persona?->fecha_ingreso }}</div>
-        <div><strong class="text-gray-700">Proyecto Asignado:</strong> {{ $persona->proyecto_persona?->proyecto->nombre_proyecto }}</div>
-        <div><strong class="text-gray-700">Cargo:</strong> {{ $persona->proyecto_persona?->cargo }}</div>
-        <div><strong class="text-gray-700">Tiempo de Dedicación:</strong> {{ $persona->proyecto_persona?->tiempo_dedicacion }}</div>
-        <div><strong class="text-gray-700">Sucursal:</strong> {{ $persona->proyecto_persona?->sucursal }}</div>
-        <div><strong class="text-gray-700">Lugar de Sufragio:</strong> {{ $persona->proyecto_persona?->lugar_sufragio }}</div>
-        <a href="{{ route('proyecto.edit', $persona->id) }}">
-          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
-            Editar
-          </button>
-        </a>
-                <a href="{{ route('proyecto.reasignacion', $persona->id) }}">
-          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
-            Asignar Nuevo Proyecto
-          </button>
-        </a>
-        <a href="{{ route('proyecto.historial', $persona->id) }}">
-          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
-            Ver Historial
-          </button>
-        </a>
+        <div><strong class="text-gray-700">Fecha de Ingreso al Proyecto:</strong> {{ $proyectoActual->fecha_ingreso }}</div>
+        <div><strong class="text-gray-700">Proyecto Asignado:</strong> {{ $proyectoActual->proyecto->nombre_proyecto }}</div>
+        <div><strong class="text-gray-700">Cargo:</strong> {{ $proyectoActual->cargo }}</div>
+        <div><strong class="text-gray-700">Tiempo de Dedicación:</strong> {{ $proyectoActual->tiempo_dedicacion }}</div>
+        <div><strong class="text-gray-700">Sucursal:</strong> {{ $proyectoActual->sucursal }}</div>
+        <div><strong class="text-gray-700">Lugar de Sufragio:</strong> {{ $proyectoActual->lugar_sufragio }}</div>
+
+        <div class="col-span-2 flex gap-2">
+          <a href="{{ route('proyecto.edit', $proyectoActual->id) }}">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm">
+              Editar Proyecto
+            </button>
+          </a>
+          <a href="{{ route('proyecto.reasignacion', $persona->id) }}">
+            <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+              Asignar Nuevo Proyecto
+            </button>
+          </a>
+          <a href="{{ route('proyecto.historial', $persona->id) }}">
+            <button class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded shadow-sm">
+              Ver Historial Completo
+            </button>
+          </a>
+        </div>
       </div>
+      @else
+      <div class="text-red-600 font-semibold mb-4">
+        Esta persona no tiene un proyecto activo asignado.
+      </div>
+      <a href="{{ route('proyecto.create', $persona->id) }}">
+        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
+          Asignar Proyecto
+        </button>
+      </a>
+      @endif
 
     </div>
   </div>

@@ -26,23 +26,30 @@ class Persona extends Model
         'ultima_empresa',
     ];
 
+
+
     public function formacion(): HasOne
     {
         return $this->hasOne(Formacion::class, 'persona_id');
     }
 
+    public function proyectos_persona()
+    {
+        return $this->hasMany(Proyecto_Persona::class);
+    }
+
     public function proyecto_persona()
     {
-        return $this->hasOne(Proyecto_Persona::class, 'persona_id')
+        return $this->hasOne(Proyecto_Persona::class)->whereNull('fecha_salida');
+    }
+    public function proyecto_actual()
+    {
+        return $this->hasOne(Proyecto_Persona::class)
+            ->with('proyecto')
             ->whereNull('fecha_salida')
             ->latest('fecha_ingreso');
     }
 
-    // Cambia de hasOne a hasMany para obtener todos los proyectos
-    public function proyectos()
-    {
-        return $this->hasMany(Proyecto_Persona::class, 'persona_id');
-    }
 
 
     //transforma los datos antes de guardarlos en este caso en minusculas

@@ -41,16 +41,36 @@ class Proyecto_PersonaController extends Controller
   // metodo sirve para actualizar 
   public function update(Request $request, Proyecto_Persona $proyecto_persona)
   {
-    $proyecto_persona->update($request->all());
-    return redirect('/');
+    $validated = $request->validate([
+      'proyecto_id' => 'required|exists:proyectos,id',
+      'fecha_ingreso' => 'required|date',
+      'cargo' => 'required|string|max:100',
+      'tiempo_dedicacion' => 'required|string|max:10',
+      'sucursal' => 'required|string|max:100',
+      'lugar_sufragio' => 'required|string|max:100',
+    ]);
+
+    try {
+      $proyecto_persona->update($validated);
+
+      // Limpiar el cache de relaciones
+      $proyecto_persona->refresh();
+      $proyecto_persona->load('proyecto', 'persona');
+
+      return redirect()
+        ->route('persona.show', $proyecto_persona->persona_id)
+        ->with('success', 'Proyecto actualizado correctamente.');
+    } catch (\Exception $e) {
+      return back()
+        ->withInput()
+        ->withErrors(['error' => 'Error al actualizar: ' . $e->getMessage()]);
+    }
   }
 
 
   public function showReassignForm($persona_id)
   {
-    /*$proyecto_persona->load(['persona', 'proyecto']);
-    $proyectos = Proyecto::all(); // Obtiene todos los proyectos disponibles
-    return view('proyecto.newproyecto', compact('proyecto_persona', 'proyectos'));*/
+
     // Validar que la persona exista
     $persona = Persona::findOrFail($persona_id);
 

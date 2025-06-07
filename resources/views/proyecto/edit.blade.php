@@ -20,12 +20,23 @@
         <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">
             Actualización de {{ $proyecto_persona->persona->nombres }} en el proyecto {{ $proyecto_persona->proyecto->nombre_proyecto }}
         </h2>
-        
+
         <form action="{{ route('proyecto.update', $proyecto_persona->id) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
 
+            <!-- Proyecto -->
+            <div>
+                <label for="proyecto_id" class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Proyecto:</label>
+                <select name="proyecto_id" id="proyecto_id" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="{{old('proyectos->id')}}">{{ $proyecto_persona->proyecto->nombre_proyecto }}</option>
+                    @foreach($proyectos as $proyecto)
+                    <option value="{{ $proyecto->id }}">{{ $proyecto->nombre_proyecto }}</option>
+                    @endforeach
 
+                </select>
+            </div>
 
             <!-- Fecha de ingreso -->
             <div>
@@ -37,27 +48,16 @@
             <!-- Cargo -->
             <div>
                 <label for="cargo" class="block text-sm font-medium text-gray-700 mb-1">Cargo:</label>
-                <select id="cargo" name="cargo" required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="{{ old('cargo',$proyecto_persona->cargo) }}">{{$proyecto_persona->cargo}}</option>
-                    <option value="Desarrollador">Desarrollador</option>
-                    <option value="Diseñador">Diseñador</option>
-                    <option value="Gerente">Gerente</option>
-                    <option value="Analista">Analista</option>
-                </select>
+                <input type="text" id="cargo" name="cargo" value="{{ old('cargo',$proyecto_persona->cargo) }}" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Escribe el cargo">
             </div>
 
             <!-- Tiempo de dedicación -->
             <div>
                 <label for="tiempo_dedicacion" class="block text-sm font-medium text-gray-700 mb-1">Tiempo Dedicación:</label>
-                <select id="tiempo_dedicacion" name="tiempo_dedicacion" required
+                <input type="text" id="tiempo_dedicacion" name="tiempo_dedicacion" value="{{ old('tiempo_dedicacion',$proyecto_persona->tiempo_dedicacion) }}" required
                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="T20">20% (T20)</option>
-                    <option value="T40">40% (T40)</option>
-                    <option value="T60">60% (T60)</option>
-                    <option value="T100" selected>100% (T100)</option>
-                    <option value="{{ old('tiempo_dedicacion',$proyecto_persona->tiempo_dedicacion) }}">{{$proyecto_persona->tiempo_dedicacion}}</option>
-                </select>
             </div>
 
             <!-- Sucursal -->
