@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('personas', function (Blueprint $table) {
@@ -22,7 +20,6 @@ return new class extends Migration
             $table->string('restriccion_alimentaria', 100)->nullable();
             $table->text('direccion_domicilio');
             $table->date('fecha_nacimiento');
-            $table->string('lugar_nacimiento', 100);
             $table->string('pais_nacimiento', 50);
             $table->string('provincia_nacimiento', 50);
             $table->string('canton_nacimiento', 50);
@@ -43,9 +40,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('personas');

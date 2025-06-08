@@ -11,23 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('proyectos', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre_proyecto', 100);
-            // otros campos específicos del proyecto
-            $table->timestamps();
-        });
-
-
-        Schema::create('proyecto_persona', function (Blueprint $table) {
+        Schema::create('proyecto_personas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('persona_id')->constrained('personas')->onDelete('cascade');
             $table->foreignId('proyecto_id')->constrained('proyectos')->onDelete('cascade');
             $table->date('fecha_ingreso');
             $table->date('fecha_salida')->nullable();
             $table->string('cargo', 100);
-            $table->string('tiempo_dedicacion', 3);
+            $table->string('tiempo_dedicacion', 5);
             $table->string('sucursal', 100);
+            $table->string('lugar_sufragio',100);
             $table->timestamps();
         });
     }
@@ -37,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('proyecto');
+        Schema::dropIfExists('proyecto_personas');
     }
 };
