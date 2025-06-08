@@ -117,6 +117,7 @@
         </button>
       </a>
       @endif
+<<<<<<< HEAD
     </div>
 
       <!-- Sección de Cuenta Bancaria -->
@@ -144,6 +145,10 @@
     </div>
     <!-- Fin de Sección de Cuenta Bancaria -->
 
+=======
+
+    </div>
+>>>>>>> Dennis
   </div>
 
 </body>
