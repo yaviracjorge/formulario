@@ -1,0 +1,60 @@
+[33mcommit 4d7404daf1787e0b5f42d0c85cdbbb556e8eaa43[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDenis[m[33m, [m[1;31morigin/Jorge[m[33m, [m[1;31morigin/Dennis[m[33m, [m[1;32mDennis[m[33m)[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Sat Jun 7 14:07:55 2025 -0500
+
+    Actualiza formulario proyecto
+
+[33mcommit ff22496f0008ecec63c05e1c3c58467e5c1d8187[m[33m ([m[1;31morigin/Jordy[m[33m)[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Tue May 27 21:04:04 2025 -0500
+
+    formulario proyectos con historial
+
+[33mcommit c800f2b41eb0350a9541814d48a81a217d26c2e8[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Mon May 26 10:43:35 2025 -0500
+
+    formulario de formacion y de proyectos
+
+[33mcommit 06d5802631706858419a46a622c5023ffecf1db8[m
+Merge: a7c18a8 e97d2d6
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Mon May 19 10:49:04 2025 -0500
+
+    Resolver conflictos en routes/web.php - mantener todas las rutas
+
+[33mcommit e97d2d6fd4f8515c4740d42e5b78204d0bde5dfc[m[33m ([m[1;31morigin/Cris[m[33m)[m
+Author: Jordy5073 <jsv.santillan@yavirac.edu.ec>
+Date:   Mon May 19 10:22:33 2025 -0500
+
+    mostar
+
+[33mcommit a7c18a844532cc18590d3393ea8261eb4f9598d6[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Mon May 19 10:18:13 2025 -0500
+
+    crear
+
+[33mcommit 124e8a85889af3712cafecec73f7111a35aa790d[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Sat May 17 18:59:40 2025 -0500
+
+    validaciones
+
+[33mcommit aadfa61baf9c3307666cf7810adb5fde3add554d[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Thu May 15 10:26:02 2025 -0500
+
+    estilos
+
+[33mcommit 312120f013db25ae81b974b8a2dd2e477a053cb1[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Wed May 14 12:34:35 2025 -0500
+
+    seeders-factory-crud de ejemplo con la tabla curso
+
+[33mcommit f58d154a8ea358cf4ac7dbf317725e2cee5e80d0[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/Dennis11[m[33m, [m[1;32mmain[m[33m)[m
+Author: yaviracjorge <jlr.corella@yavirac.edu.ec>
+Date:   Mon May 12 08:02:42 2025 -0500
+
+    Se agrega el proyecto
