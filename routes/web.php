@@ -15,6 +15,9 @@ Route::get('/persona/{id}', [PersonaController::class,'show'])->name('persona.sh
 Route::get('/persona/{id}/edit', [PersonaController::class, 'edit'])->name('persona.edit');
 Route::put('/persona/{id}', [PersonaController::class, 'update'])->name('persona.update');
 
+Route::get('/persona/{id}/pdf', [PersonaController::class, 'generatePdf'])->name('persona.pdf');
+Route::get('/persona/{id}/pdf/full', [PersonaController::class, 'generateFullReport'])->name('persona.pdf.full');
+
 
 Route::get('/cuentabancaria/create', [CuentaBancariaController::class, 'create'])->name('cuentabancaria.create');
 Route::post('/cuentabancaria', [CuentaBancariaController::class, 'store'])->name('cuentabancaria.store');

@@ -117,10 +117,9 @@
         </button>
       </a>
       @endif
-<<<<<<< HEAD
     </div>
 
-      <!-- Sección de Cuenta Bancaria -->
+    <!-- Sección de Cuenta Bancaria -->
     <div class="mt-8 border-t pt-6">
       <h2 class="text-2xl font-bold mb-4 text-blue-600">Cuenta Bancaria</h2>
 
@@ -145,11 +144,14 @@
     </div>
     <!-- Fin de Sección de Cuenta Bancaria -->
 
-=======
-
+    <!-- Botón para generar PDF -->
+    <div class="mt-4">
+      <a href="{{ route('persona.pdf', $persona->id) }}" target="_blank">
+        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-sm">
+          📄 Generar PDF
+        </button>
+      </a>
     </div>
->>>>>>> Dennis
-  </div>
 
 </body>
 
