@@ -5,118 +5,137 @@ namespace App\Http\Controllers;
 use App\Models\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PersonaController extends Controller
 {
+    // Mostrar todas las personas con su proyecto actual
+    public function index()
+    {
+        $personas = Persona::with([
+            'formacion',
+            'proyecto_actual.proyecto',
+            'cuentaBancaria'
+        ])->get();
 
-    //muestra en una tabla de todas las personas
-public function index()
-{
-    $mostrard = Persona::with([
-        'formacion',
-        'proyectos_persona' => function($query) {
-            $query->with('proyecto')
-                  ->whereNull('fecha_salida'); // Solo proyectos activos
-        }
-    ])->get();
-    
-    return view('persona.show', compact('mostrard'));
-}
+        return view('persona.show', ['mostrard' => $personas]);
+    }
 
-    //manda al formulario para crear una persona
+    // Formulario para crear persona
     public function create()
     {
         return view('persona.create');
     }
 
-    //crea una nueva persona y redirije a crear una formacion
+    // Guardar persona
     public function store(Request $request)
     {
-        $persona = Persona::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto')->store('imagenes', 'public');
+            $data['foto'] = $foto;
+        }
+
+        $persona = Persona::create($data);
+
         return redirect('/formacion/create')->with('persona_id', $persona->id);
     }
 
+    // Mostrar datos de persona individual
     public function show($id)
     {
         $persona = Persona::with([
             'formacion',
-            'proyectos_persona' => function ($query) {
-                $query->with('proyecto')
-                    ->orderBy('fecha_ingreso', 'desc');
-            },'cuentaBancaria'
+            'proyectos_persona.proyecto',
+            'cuentaBancaria'
         ])->findOrFail($id);
 
-        // Obtener el proyecto actual activo (sin fecha_salida)
         $proyectoActual = $persona->proyectos_persona
-            ->where('fecha_salida', null)
+            ->whereNull('fecha_salida')
             ->first();
 
         return view('welcome', compact('persona', 'proyectoActual'));
     }
-    
-       /**
-     * Muestra el formulario para editar una persona.
-     */
+
+    // Formulario para editar persona
     public function edit($id)
     {
         $persona = Persona::findOrFail($id);
         return view('persona.edit', compact('persona'));
     }
 
-    /**
-     * Actualiza la persona en la base de datos.
-     */
+    // Actualizar persona
     public function update(Request $request, $id)
-{
-    $persona = Persona::findOrFail($id);
+    {
+        $persona = Persona::findOrFail($id);
 
-    // Validación de datos corregida
-    $validatedData = $request->validate([
-        'cedula_pasaporte' => [
-            'required',
-            'string',
-            'max:20',
-            Rule::unique('personas')->ignore($persona->id),
-        ],
-        'ruc' => ['nullable', 'string', 'max:20'],
-        'apellidos' => ['required', 'string', 'max:100'],
-        'nombres' => ['required', 'string', 'max:100'],
-        'estado_civil' => ['nullable', 'string', 'max:20'],
-        'num_hijos' => ['nullable', 'integer', 'min:0'],
-        'restriccion_alimentaria' => ['nullable', 'string', 'max:100'],
-        'direccion_domicilio' => ['required', 'string'],
-        'fecha_nacimiento' => ['required', 'date'],
-        'pais_nacimiento' => ['required', 'string', 'max:50'],
-        'provincia_nacimiento' => ['required', 'string', 'max:50'],
-        'canton_nacimiento' => ['required', 'string', 'max:50'],
-        'posee_discapacidad' => ['required', 'in:0,1'], // Cambiado a 'in'
-        'discapacidad_detalle' => ['nullable', 'string', 'max:100'],
-        'posee_alergia' => ['required', 'in:0,1'], // Cambiado a 'in'
-        'alergia_detalle' => ['nullable', 'string', 'max:100'],
-        'tipo_sangre' => ['required', 'string', 'max:5'],
-        'correo' => [
-            'required',
-            'string',
-            'email',
-            'max:255',
-            Rule::unique('personas')->ignore($persona->id),
-        ],
-        'contacto_emergencia_nombre' => ['nullable', 'string', 'max:100'],
-        'contacto_emergencia_parentesco' => ['nullable', 'string', 'max:50'],
-        'contacto_emergencia_convencional' => ['nullable', 'string', 'max:20'],
-        'contacto_emergencia_celular' => ['nullable', 'string', 'max:20'],
-        'telefono_convencional' => ['nullable', 'string', 'max:20'],
-        'telefono_celular' => ['nullable', 'string', 'max:20'],
-        'ultima_empresa' => ['required', 'string'],
-    ]);
+        $validatedData = $request->validate([
+            'cedula_pasaporte' => [
+                'required', 'string', 'max:20',
+                Rule::unique('personas')->ignore($persona->id),
+            ],
+            'ruc' => ['nullable', 'string', 'max:20'],
+            'apellidos' => ['required', 'string', 'max:100'],
+            'nombres' => ['required', 'string', 'max:100'],
+            'estado_civil' => ['nullable', 'string', 'max:20'],
+            'num_hijos' => ['nullable', 'integer', 'min:0'],
+            'restriccion_alimentaria' => ['nullable', 'string', 'max:100'],
+            'direccion_domicilio' => ['required', 'string'],
+            'fecha_nacimiento' => ['required', 'date'],
+            'pais_nacimiento' => ['required', 'string', 'max:50'],
+            'provincia_nacimiento' => ['required', 'string', 'max:50'],
+            'canton_nacimiento' => ['required', 'string', 'max:50'],
+            'posee_discapacidad' => ['required', 'in:0,1'],
+            'discapacidad_detalle' => ['nullable', 'string', 'max:100'],
+            'posee_alergia' => ['required', 'in:0,1'],
+            'alergia_detalle' => ['nullable', 'string', 'max:100'],
+            'tipo_sangre' => ['required', 'string', 'max:5'],
+            'correo' => [
+                'required', 'string', 'email', 'max:255',
+                Rule::unique('personas')->ignore($persona->id),
+            ],
+            'contacto_emergencia_nombre' => ['nullable', 'string', 'max:100'],
+            'contacto_emergencia_parentesco' => ['nullable', 'string', 'max:50'],
+            'contacto_emergencia_convencional' => ['nullable', 'string', 'max:20'],
+            'contacto_emergencia_celular' => ['nullable', 'string', 'max:20'],
+            'telefono_convencional' => ['nullable', 'string', 'max:20'],
+            'telefono_celular' => ['nullable', 'string', 'max:20'],
+            'ultima_empresa' => ['required', 'string'],
+        ]);
 
-    // Convertir valores booleanos
-    $validatedData['posee_discapacidad'] = (bool)$validatedData['posee_discapacidad'];
-    $validatedData['posee_alergia'] = (bool)$validatedData['posee_alergia'];
+        $validatedData['posee_discapacidad'] = (bool)$validatedData['posee_discapacidad'];
+        $validatedData['posee_alergia'] = (bool)$validatedData['posee_alergia'];
 
-    // Actualizar la persona
-    $persona->update($validatedData);
+        $persona->update($validatedData);
 
-    return redirect()->route('persona.show', $persona->id)->with('success', 'Persona actualizada correctamente.');
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto')->store('imagenes', 'public');
+            $persona->foto = $foto;
+            $persona->save();
+        }
+
+        return redirect()->route('persona.show', $persona->id)
+                         ->with('success', 'Persona actualizada correctamente.');
+    }
+
+    // Generar PDF para listado o persona individual
+    public function pdf($id = null)
+    {
+        if ($id) {
+            // PDF individual
+            $personas = Persona::with(['formacion', 'cuentaBancaria', 'proyecto_actual.proyecto'])
+                ->where('id', $id)
+                ->get();
+        } else {
+            // PDF listado completo
+            $personas = Persona::with(['formacion', 'cuentaBancaria', 'proyecto_actual.proyecto'])->get();
+        }
+
+        $pdf = Pdf::loadView('persona.pdf', ['mostrard' => $personas]);
+
+        $filename = $id ? "persona_{$id}.pdf" : 'personas_listado.pdf';
+
+        return $pdf->stream($filename);
     }
 }

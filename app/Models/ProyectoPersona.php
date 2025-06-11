@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Proyecto_Persona extends Model
+class ProyectoPersona extends Model
 {
     protected $guarded = [];
     protected $table = 'proyecto_personas';

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 class Persona extends Model
 {
     protected $table = 'personas';
-    protected $guarded = [];
+    protected $guarded = []; // asignación masiva permitida
+
     protected $capitalizar = [
         'nombres',
         'apellidos',
@@ -26,33 +26,40 @@ class Persona extends Model
         'ultima_empresa',
     ];
 
-
-
-    public function formacion(): HasOne
+    public function formacion()
     {
-        return $this->hasOne(Formacion::class, 'persona_id');
+        return $this->hasMany(Formacion::class, 'persona_id');
     }
 
     public function proyectos_persona()
     {
-        return $this->hasMany(Proyecto_Persona::class);
+        return $this->hasMany(ProyectoPersona::class);
     }
 
     public function proyecto_persona()
     {
-        return $this->hasOne(Proyecto_Persona::class)->whereNull('fecha_salida');
+        return $this->hasOne(ProyectoPersona::class)->whereNull('fecha_salida');
     }
+
     public function proyecto_actual()
     {
-        return $this->hasOne(Proyecto_Persona::class)
+        return $this->hasOne(ProyectoPersona::class)
             ->with('proyecto')
             ->whereNull('fecha_salida')
             ->latest('fecha_ingreso');
     }
 
+    public function cuentaBancaria()
+    {
+        return $this->hasOne(CuentaBancaria::class);
+    }
 
+    protected $casts = [
+        'fecha_nacimiento' => 'date:Y-m-d',
+        'posee_discapacidad' => 'boolean',
+        'posee_alergia' => 'boolean',
+    ];
 
-    //transforma los datos antes de guardarlos en este caso en minusculas
     protected static function boot()
     {
         parent::boot();
@@ -90,27 +97,26 @@ class Persona extends Model
         });
     }
 
-
-    //transforma lo datos antes de mostrarlos en este caso la prmera letra en mayuscula
-    public function getAttribute($key)
+    public function getNombresAttribute($value)
     {
-        $value = parent::getAttribute($key);
+        return ucwords($value);
+    }
 
-        if (in_array($key, $this->capitalizar) && is_string($value)) {
-            return ucwords($value);
+    public function getApellidosAttribute($value)
+    {
+        return ucwords($value);
+    }
+
+    public function getEstadoCivilAttribute($value)
+    {
+        return ucwords($value);
+    }
+
+    public function getFotoUrlAttribute()
+    {
+        if ($this->foto) {
+            return Storage::url($this->foto);
         }
-
-        return $value;
+        return asset('images/default.png');
     }
-
-    public function cuentaBancaria()
-    {
-    return $this->hasOne(CuentaBancaria::class);
-    }
-
-    protected $casts = [
-    'fecha_nacimiento' => 'date:Y-m-d', // Formato para input de fecha
-    'posee_discapacidad' => 'boolean',
-    'posee_alergia' => 'boolean',
-    ];
 }

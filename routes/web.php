@@ -1,44 +1,50 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormacionController;
 use App\Http\Controllers\PersonaController;
-use App\Http\Controllers\Proyecto;
-use App\Http\Controllers\Proyecto_PersonaController;
+use App\Http\Controllers\ProyectoController;
+use App\Http\Controllers\ProyectoPersonaController;
 use App\Http\Controllers\CuentaBancariaController;
 
+// Página principal
+Route::get('/', [PersonaController::class, 'index'])->name('home');
 
+// Persona CRUD y PDFs
+Route::resource('persona', PersonaController::class);
+Route::get('persona/pdf', [PersonaController::class, 'pdf'])->name('persona.pdf');
+Route::get('persona/{persona}/pdf', [PersonaController::class, 'pdfIndividual'])->name('persona.pdf.individual');
 
-Route::get('/persona/create',[PersonaController::class,'create'])->name('persona.create');
-Route::post('/persona',[PersonaController::class,'store'])->name('persona.store');
-Route::get('/',[PersonaController::class,'index'])->name('home');
-Route::get('/persona/{id}', [PersonaController::class,'show'])->name('persona.show');
-Route::get('/persona/{id}/edit', [PersonaController::class, 'edit'])->name('persona.edit');
-Route::put('/persona/{id}', [PersonaController::class, 'update'])->name('persona.update');
+// Cuenta bancaria CRUD
+Route::resource('cuentabancaria', CuentaBancariaController::class);
 
+// Formación CRUD
+Route::resource('formacion', FormacionController::class);
 
-Route::get('/cuentabancaria/create', [CuentaBancariaController::class, 'create'])->name('cuentabancaria.create');
-Route::post('/cuentabancaria', [CuentaBancariaController::class, 'store'])->name('cuentabancaria.store');
-Route::get('/cuentabancaria/show', [CuentaBancariaController::class, 'show'])->name('cuentabancaria.show');
-Route::get('/cuentabancaria/{cuentabancaria}/edit', [CuentaBancariaController::class, 'edit'])->name('cuentabancaria.edit');
-Route::put('/cuentabancaria/{cuentabancaria}', [CuentaBancariaController::class, 'update'])->name('cuentabancaria.update');
+// Proyecto CRUD
+Route::resource('proyectos', ProyectoController::class);
 
+// Proyecto-Persona (Asignaciones)
+Route::prefix('asignaciones')->group(function () {
+    // Mostrar formulario de asignación de proyecto
+    Route::get('/create/{persona}', [ProyectoPersonaController::class, 'create'])->name('asignaciones.create');
 
+    // Guardar nueva asignación
+    Route::post('/', [ProyectoPersonaController::class, 'store'])->name('asignaciones.store');
 
-Route::get('/formacion/create', [FormacionController::class, 'create'])->name('formacion.create');
-Route::post('/formacion', [FormacionController::class, 'store'])->name('formacion.store');
-Route::get('/formacion/show',[FormacionController::class,'show'])->name('formacion.show');
-Route::get('/formacion/{formacion}/edit',[FormacionController::class,'edit'])->name('formacion.edit');
-Route::put('/formacion/{formacion}',[FormacionController::class,'update'])->name('formacion.update');
+    // Editar una asignación existente
+    Route::get('/{proyectoPersona}/edit', [ProyectoPersonaController::class, 'edit'])->name('asignaciones.edit');
 
-Route::get('/proyectos/reasignacion/{proyecto_persona}',[Proyecto_PersonaController::class,'showReassignForm'])->name('proyecto.reasignacion');
-Route::post('/proyecto/reasignar', [Proyecto_PersonaController::class, 'storeReassignment'])->name('proyecto.reasignar');
-Route::get('/persona/{persona_id}/proyectos/historial', [Proyecto_PersonaController::class, 'historial'])->name('proyecto.historial');
+    // Actualizar asignación
+    Route::put('/{proyectoPersona}', [ProyectoPersonaController::class, 'update'])->name('asignaciones.update');
 
-Route::get('/proyecto/create', [Proyecto_PersonaController::class, 'create'])->name('proyecto.create');
-Route::post('/proyecto', [Proyecto_PersonaController::class, 'store'])->name('proyecto.store');
-Route::get('/proyecto/show',[Proyecto_PersonaController::class,'show'])->name('proyecto.show');
-Route::get('/proyecto/{proyecto_persona}/edit',[Proyecto_PersonaController::class,'edit'])->name('proyecto.edit');
-Route::put('/proyecto/{proyecto_persona}',[Proyecto_PersonaController::class,'update'])->name('proyecto.update');
+    // Eliminar asignación
+    Route::delete('/{proyectoPersona}', [ProyectoPersonaController::class, 'destroy'])->name('asignaciones.destroy');
 
-Route::get('/crear_proyecto/create', [Proyecto::class, 'create'])->name('crear_proyecto.create');
-Route::post('/crear_proyecto', [Proyecto::class, 'store'])->name('crear_proyecto.store');
+    // Reasignar proyecto
+    Route::get('/reasignacion/{proyectoPersona}', [ProyectoPersonaController::class, 'showReassignForm'])->name('asignaciones.reasignacion');
+    Route::post('/reasignar', [ProyectoPersonaController::class, 'storeReassignment'])->name('asignaciones.reasignar');
+
+    // Ver historial de asignaciones de una persona
+    Route::get('/persona/{persona}/historial', [ProyectoPersonaController::class, 'historial'])->name('asignaciones.historial');
+});
