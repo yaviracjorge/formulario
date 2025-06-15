@@ -26,6 +26,36 @@ class Persona extends Model
         'ultima_empresa',
     ];
 
+    // Relaciones 1:1
+    public function informacionNacimiento(): HasOne
+    {
+        return $this->hasOne(InformacionNacimiento::class);
+    }
+
+    public function direccionDomicilio(): HasOne
+    {
+        return $this->hasOne(DireccionDomicilio::class);
+    }
+
+    public function informacionMedica(): HasOne
+    {
+        return $this->hasOne(InformacionMedica::class);
+    }
+
+    public function informacionContacto(): HasOne
+    {
+        return $this->hasOne(InformacionContacto::class);
+    }
+
+    public function contactoEmergencia(): HasOne
+    {
+        return $this->hasOne(ContactoEmergencia::class);
+    }
+
+    public function informacionLaboral(): HasOne
+    {
+        return $this->hasOne(InformacionLaboral::class);
+    }
 
 
     public function formacion(): HasOne
@@ -105,12 +135,12 @@ class Persona extends Model
 
     public function cuentaBancaria()
     {
-    return $this->hasOne(CuentaBancaria::class);
+        return $this->hasOne(CuentaBancaria::class);
     }
 
     protected $casts = [
-    'fecha_nacimiento' => 'date:Y-m-d', // Formato para input de fecha
-    'posee_discapacidad' => 'boolean',
-    'posee_alergia' => 'boolean',
+        'fecha_nacimiento' => 'date:Y-m-d', // Formato para input de fecha
+        'posee_discapacidad' => 'boolean',
+        'posee_alergia' => 'boolean',
     ];
 }

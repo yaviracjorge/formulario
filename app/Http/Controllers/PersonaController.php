@@ -13,15 +13,16 @@ class PersonaController extends Controller
     //muestra en una tabla de todas las personas
     public function index()
     {
-        $mostrard = Persona::with([
-            'formacion',
-            'proyectos_persona' => function ($query) {
-                $query->with('proyecto')
-                    ->whereNull('fecha_salida'); // Solo proyectos activos
-            }
+        $personas = Persona::with([
+            'informacionNacimiento',
+            'direccionDomicilio',
+            'informacionMedica',
+            'informacionContacto',
+            'contactoEmergencia',
+            'informacionLaboral'
         ])->get();
 
-        return view('persona.show', compact('mostrard'));
+        return view('persona.show', compact('personas'));
     }
 
     //manda al formulario para crear una persona
@@ -30,16 +31,126 @@ class PersonaController extends Controller
         return view('persona.create');
     }
 
-    //crea una nueva persona y redirije a crear una formacion
+
+    /**
+     * Crea una nueva persona con toda su información relacionada y redirije a crear formación
+     */
     public function store(Request $request)
     {
-        $persona = Persona::create($request->all());
+        // Validación
+        $validatedData = $request->validate([
+            // Datos principales
+            'cedula_pasaporte' => 'required|string|max:20|unique:personas',
+            'ruc' => 'nullable|string|max:20',
+            'apellidos' => 'required|string|max:100',
+            'nombres' => 'required|string|max:100',
+            'fecha_nacimiento' => 'required|date',
+            'correo' => 'required|email|unique:personas',
+            'estado_civil' => 'required|string|max:20',
+            'num_hijos' => 'nullable|integer|min:0',
+
+            // Información de nacimiento
+            'pais_nacimiento' => 'required|string|max:30',
+            'provincia_nacimiento' => 'required|string|max:30',
+            'canton_nacimiento' => 'required|string|max:30',
+
+            // Dirección
+            'direccion_completa' => 'required|string',
+
+            // Información médica
+            'tipo_sangre' => 'required|string|max:6',
+            'posee_discapacidad' => 'required|boolean',
+            'discapacidad_detalle' => 'nullable|string|max:100',
+            'posee_alergia' => 'required|boolean',
+            'alergia_detalle' => 'nullable|string|max:100',
+            'posee_restriccion_alimentaria' => 'required|boolean',
+            'restriccion_alimentaria_detalle' => 'nullable|string',
+
+            // Información de contacto
+            'telefono_convencional' => 'nullable|string|max:15',
+            'telefono_celular' => 'nullable|string|max:15',
+
+            // Contacto de emergencia
+            'contacto_emergencia_nombre' => 'nullable|string|max:70',
+            'contacto_emergencia_parentesco' => 'nullable|string|max:20',
+            'contacto_emergencia_convencional' => 'nullable|string|max:15',
+            'contacto_emergencia_celular' => 'nullable|string|max:15',
+
+            // Información laboral
+            'ultima_empresa' => 'required|string',
+        ]);
+
+        // Crear la persona
+        $persona = Persona::create([
+            'cedula_pasaporte' => $validatedData['cedula_pasaporte'],
+            'ruc' => $validatedData['ruc'],
+            'apellidos' => $validatedData['apellidos'],
+            'nombres' => $validatedData['nombres'],
+            'fecha_nacimiento' => $validatedData['fecha_nacimiento'],
+            'correo' => $validatedData['correo'],
+            'estado_civil' => $validatedData['estado_civil'],
+            'num_hijos' => $validatedData['num_hijos'],
+        ]);
+
+        // Crear información de nacimiento
+        $persona->informacionNacimiento()->create([
+            'pais_nacimiento' => $validatedData['pais_nacimiento'],
+            'provincia_nacimiento' => $validatedData['provincia_nacimiento'],
+            'canton_nacimiento' => $validatedData['canton_nacimiento'],
+        ]);
+
+        // Crear dirección de domicilio
+        $persona->direccionDomicilio()->create([
+            'direccion_completa' => $validatedData['direccion_completa'],
+        ]);
+
+        // Crear información médica
+        $persona->informacionMedica()->create([
+            'tipo_sangre' => $validatedData['tipo_sangre'],
+            'posee_discapacidad' => $validatedData['posee_discapacidad'],
+            'discapacidad_detalle' => $validatedData['discapacidad_detalle'],
+            'posee_alergia' => $validatedData['posee_alergia'],
+            'alergia_detalle' => $validatedData['alergia_detalle'],
+            'posee_restriccion_alimentaria' => $validatedData['posee_restriccion_alimentaria'],
+            'restriccion_alimentaria_detalle' => $validatedData['restriccion_alimentaria_detalle'],
+        ]);
+
+        // Crear información de contacto
+        $persona->informacionContacto()->create([
+            'telefono_convencional' => $validatedData['telefono_convencional'],
+            'telefono_celular' => $validatedData['telefono_celular'],
+        ]);
+
+        // Crear contacto de emergencia
+        $persona->contactoEmergencia()->create([
+            'nombre' => $validatedData['contacto_emergencia_nombre'],
+            'parentesco' => $validatedData['contacto_emergencia_parentesco'],
+            'telefono_convencional' => $validatedData['contacto_emergencia_convencional'],
+            'telefono_celular' => $validatedData['contacto_emergencia_celular'],
+        ]);
+
+        // Crear información laboral
+        $persona->informacionLaboral()->create([
+            'ultima_empresa' => $validatedData['ultima_empresa'],
+        ]);
+    
+        // Redireccionar a crear formación con el ID de la persona
         return redirect('/formacion/create')->with('persona_id', $persona->id);
     }
 
+    /**
+     * Muestra una persona específica con toda su información
+     */
     public function show($id)
     {
         $persona = Persona::with([
+
+            'informacionNacimiento',
+            'direccionDomicilio',
+            'informacionMedica',
+            'informacionContacto',
+            'contactoEmergencia',
+            'informacionLaboral',
             'formacion',
             'proyectos_persona' => function ($query) {
                 $query->with('proyecto')
@@ -55,95 +166,179 @@ class PersonaController extends Controller
 
         return view('welcome', compact('persona', 'proyectoActual'));
     }
-
     /**
-     * Muestra el formulario para editar una persona.
+     * Muestra el formulario para editar una persona
      */
     public function edit($id)
     {
-        $persona = Persona::findOrFail($id);
+        $persona = Persona::with([
+            'informacionNacimiento',
+            'direccionDomicilio',
+            'informacionMedica',
+            'informacionContacto',
+            'contactoEmergencia',
+            'informacionLaboral'
+        ])->findOrFail($id);
+
         return view('persona.edit', compact('persona'));
     }
 
     /**
-     * Actualiza la persona en la base de datos.
+     * Actualiza la persona y toda su información relacionada
      */
     public function update(Request $request, $id)
     {
         $persona = Persona::findOrFail($id);
 
-        // Validación de datos corregida
+        // Validación
         $validatedData = $request->validate([
+            // Datos principales
             'cedula_pasaporte' => [
                 'required',
                 'string',
                 'max:20',
                 Rule::unique('personas')->ignore($persona->id),
             ],
-            'ruc' => ['nullable', 'string', 'max:20'],
-            'apellidos' => ['required', 'string', 'max:100'],
-            'nombres' => ['required', 'string', 'max:100'],
-            'estado_civil' => ['nullable', 'string', 'max:20'],
-            'num_hijos' => ['nullable', 'integer', 'min:0'],
-            'restriccion_alimentaria' => ['nullable', 'string', 'max:100'],
-            'direccion_domicilio' => ['required', 'string'],
-            'fecha_nacimiento' => ['required', 'date'],
-            'pais_nacimiento' => ['required', 'string', 'max:50'],
-            'provincia_nacimiento' => ['required', 'string', 'max:50'],
-            'canton_nacimiento' => ['required', 'string', 'max:50'],
-            'posee_discapacidad' => ['required', 'in:0,1'], // Cambiado a 'in'
-            'discapacidad_detalle' => ['nullable', 'string', 'max:100'],
-            'posee_alergia' => ['required', 'in:0,1'], // Cambiado a 'in'
-            'alergia_detalle' => ['nullable', 'string', 'max:100'],
-            'tipo_sangre' => ['required', 'string', 'max:5'],
+            'ruc' => 'nullable|string|max:20',
+            'apellidos' => 'required|string|max:100',
+            'nombres' => 'required|string|max:100',
+            'fecha_nacimiento' => 'required|date',
             'correo' => [
                 'required',
-                'string',
                 'email',
-                'max:255',
                 Rule::unique('personas')->ignore($persona->id),
             ],
-            'contacto_emergencia_nombre' => ['nullable', 'string', 'max:100'],
-            'contacto_emergencia_parentesco' => ['nullable', 'string', 'max:50'],
-            'contacto_emergencia_convencional' => ['nullable', 'string', 'max:20'],
-            'contacto_emergencia_celular' => ['nullable', 'string', 'max:20'],
-            'telefono_convencional' => ['nullable', 'string', 'max:20'],
-            'telefono_celular' => ['nullable', 'string', 'max:20'],
-            'ultima_empresa' => ['required', 'string'],
+            'estado_civil' => 'required|string|max:20',
+            'num_hijos' => 'nullable|integer|min:0',
+
+            // Información de nacimiento
+            'pais_nacimiento' => 'required|string|max:30',
+            'provincia_nacimiento' => 'required|string|max:30',
+            'canton_nacimiento' => 'required|string|max:30',
+
+            // Dirección
+            'direccion_completa' => 'required|string',
+
+            // Información médica
+            'tipo_sangre' => 'required|string|max:6',
+            'posee_discapacidad' => 'required|boolean',
+            'discapacidad_detalle' => 'nullable|string|max:100',
+            'posee_alergia' => 'required|boolean',
+            'alergia_detalle' => 'nullable|string|max:100',
+            'posee_restriccion_alimentaria' => 'required|boolean',
+            'restriccion_alimentaria_detalle' => 'nullable|string',
+
+            // Información de contacto
+            'telefono_convencional' => 'nullable|string|max:15',
+            'telefono_celular' => 'nullable|string|max:15',
+
+            // Contacto de emergencia
+            'contacto_emergencia_nombre' => 'nullable|string|max:70',
+            'contacto_emergencia_parentesco' => 'nullable|string|max:20',
+            'contacto_emergencia_convencional' => 'nullable|string|max:15',
+            'contacto_emergencia_celular' => 'nullable|string|max:15',
+
+            // Información laboral
+            'ultima_empresa' => 'required|string',
         ]);
 
-        // Convertir valores booleanos
-        $validatedData['posee_discapacidad'] = (bool)$validatedData['posee_discapacidad'];
-        $validatedData['posee_alergia'] = (bool)$validatedData['posee_alergia'];
+        // Actualizar la persona principal
+        $persona->update([
+            'cedula_pasaporte' => $validatedData['cedula_pasaporte'],
+            'ruc' => $validatedData['ruc'],
+            'apellidos' => $validatedData['apellidos'],
+            'nombres' => $validatedData['nombres'],
+            'fecha_nacimiento' => $validatedData['fecha_nacimiento'],
+            'correo' => $validatedData['correo'],
+            'estado_civil' => $validatedData['estado_civil'],
+            'num_hijos' => $validatedData['num_hijos'],
+        ]);
 
-        // Actualizar la persona
-        $persona->update($validatedData);
+        // Actualizar información de nacimiento
+        $persona->informacionNacimiento()->updateOrCreate(
+            ['persona_id' => $persona->id],
+            [
+                'pais_nacimiento' => $validatedData['pais_nacimiento'],
+                'provincia_nacimiento' => $validatedData['provincia_nacimiento'],
+                'canton_nacimiento' => $validatedData['canton_nacimiento'],
+            ]
+        );
 
-        return redirect()->route('persona.show', $persona->id)->with('success', 'Persona actualizada correctamente.');
+        // Actualizar dirección de domicilio
+        $persona->direccionDomicilio()->updateOrCreate(
+            ['persona_id' => $persona->id],
+            ['direccion_completa' => $validatedData['direccion_completa']]
+        );
+
+        // Actualizar información médica
+        $persona->informacionMedica()->updateOrCreate(
+            ['persona_id' => $persona->id],
+            [
+                'tipo_sangre' => $validatedData['tipo_sangre'],
+                'posee_discapacidad' => $validatedData['posee_discapacidad'],
+                'discapacidad_detalle' => $validatedData['discapacidad_detalle'],
+                'posee_alergia' => $validatedData['posee_alergia'],
+                'alergia_detalle' => $validatedData['alergia_detalle'],
+                'posee_restriccion_alimentaria' => $validatedData['posee_restriccion_alimentaria'],
+                'restriccion_alimentaria_detalle' => $validatedData['restriccion_alimentaria_detalle'],
+            ]
+        );
+
+        // Actualizar información de contacto
+        $persona->informacionContacto()->updateOrCreate(
+            ['persona_id' => $persona->id],
+            [
+                'telefono_convencional' => $validatedData['telefono_convencional'],
+                'telefono_celular' => $validatedData['telefono_celular'],
+            ]
+        );
+
+        // Actualizar contacto de emergencia
+        $persona->contactoEmergencia()->updateOrCreate(
+            ['persona_id' => $persona->id],
+            [
+                'nombre' => $validatedData['contacto_emergencia_nombre'],
+                'parentesco' => $validatedData['contacto_emergencia_parentesco'],
+                'telefono_convencional' => $validatedData['contacto_emergencia_convencional'],
+                'telefono_celular' => $validatedData['contacto_emergencia_celular'],
+            ]
+        );
+
+        // Actualizar información laboral
+        $persona->informacionLaboral()->updateOrCreate(
+            ['persona_id' => $persona->id],
+            ['ultima_empresa' => $validatedData['ultima_empresa']]
+        );
+      
+
+        return redirect()->route('persona.show', $persona->id)
+            ->with('success', 'Persona actualizada correctamente');
     }
 
+
+    //genera el pdf
     public function generatePdf($id)
     {
         $persona = Persona::with([
-            'formacion',
-            'cuentaBancaria',
-            'proyecto_actual.proyecto'
+            'informacionNacimiento',
+            'direccionDomicilio',
+            'informacionMedica',
+            'informacionContacto',
+            'contactoEmergencia',
+            'informacionLaboral'
         ])->findOrFail($id);
+        
 
-        $proyectoActual = $persona->proyecto_actual;
+        $pdf = PDF::loadView('persona.pdf', compact('persona'));
 
-        $pdf = PDF::loadView('persona.pdf', compact('persona', 'proyectoActual'));
-
-        // Configuraciones mejoradas para DomPDF
         $pdf->setPaper('A4', 'portrait');
         $pdf->setOptions([
-            'dpi' => 96,                    // Reducir DPI puede ayudar con el tamaño
-            'defaultFont' => 'DejaVu Sans', // Fuente que soporta mejor los tamaños
+            'dpi' => 96,
+            'defaultFont' => 'DejaVu Sans',
             'isHtml5ParserEnabled' => true,
             'isPhpEnabled' => true,
             'isFontSubsettingEnabled' => true,
-            'debugPng' => false,
-            'enable_php' => true
+            'isRemoteEnabled' => true,
         ]);
 
         $filename = 'persona_' . $persona->cedula_pasaporte . '_' . date('Y-m-d') . '.pdf';

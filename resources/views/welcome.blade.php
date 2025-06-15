@@ -1,21 +1,47 @@
-<!DOCTYPE html>
-<html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Detalle de Persona</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .bg-blur {
+      position: relative;
+      overflow: hidden; /* Para que el pseudo no sobresalga */
+    }
+    .bg-blur::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('{{ asset('imagenes/logo.png') }}');
+      background-size: 120% auto;
+      background-position: center center;
+      background-repeat: no-repeat;
+      filter: blur(4px);
+      opacity: 0.1;
+      z-index: 0;
+      /* para que no se interponga en el contenido */
+      pointer-events: none;
+    }
+    /* Para que el contenido esté sobre la imagen */
+    .bg-blur > * {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100 p-6">
 
-  <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-8">
+  <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-8 relative bg-blur">
+
+
+
     <a href="{{ route('home') }}" class="inline-block mb-4 text-indigo-600 hover:underline">
       ← Volver al inicio
     </a>
     <h1 class="text-3xl font-bold text-center mb-8">Datos de la Persona</h1>
 
     <div class="grid grid-cols-2 gap-4">
+
       <div><strong>Cédula o Pasaporte:</strong> {{ $persona->cedula_pasaporte }}</div>
       <div><strong>RUC:</strong> {{ $persona->ruc ?? ' ' }}</div>
 
@@ -25,33 +51,45 @@
       <div><strong>Estado Civil:</strong> {{ $persona->estado_civil ?? ' ' }}</div>
       <div><strong>Número de Hijos:</strong> {{ $persona->num_hijos ?? ' ' }}</div>
 
-      <div><strong>Restricción Alimentaria:</strong> {{ $persona->restriccion_alimentaria ?? 'Ninguna' }}</div>
-      <div><strong>Dirección Domicilio:</strong> {{ $persona->direccion_domicilio }}</div>
+      <div><strong>Restricción Alimentaria:</strong> {{ $persona->informacionMedica->restriccion_alimentaria ?? 'Ninguna' }}</div>
 
-      <div><strong>Fecha de Nacimiento:</strong> {{ $persona->fecha_nacimiento }}</div>
-      <div><strong>País de Nacimiento:</strong> {{ $persona->pais_nacimiento }}</div>
-      <div><strong>Provincia de Nacimiento:</strong> {{ $persona->provincia_nacimiento }}</div>
-      <div><strong>Cantón de Nacimiento:</strong> {{ $persona->canton_nacimiento }}</div>
+      <!-- Dirección Domicilio -->
+      <div><strong>Dirección Domicilio:</strong> {{ optional($persona->direccionDomicilio)->direccion_completa ?? 'No disponible' }}</div>
 
-      <div><strong>Posee Discapacidad:</strong> {{ $persona->posee_discapacidad ? 'Sí' : 'No' }}</div>
-      <div><strong>Detalle Discapacidad:</strong> {{ $persona->discapacidad_detalle ?? ' ' }}</div>
+      <!-- Fecha de Nacimiento -->
+      <div><strong>Fecha de Nacimiento:</strong> {{ $persona->fecha_nacimiento->format('d/m/Y') }}</div>
 
-      <div><strong>Posee Alergia:</strong> {{ $persona->posee_alergia ? 'Sí' : 'No' }}</div>
-      <div><strong>Detalle Alergia:</strong> {{ $persona->alergia_detalle ?? ' ' }}</div>
+      <!-- País de Nacimiento -->
+      <div><strong>País de Nacimiento:</strong> {{ optional($persona->informacionNacimiento)->pais_nacimiento ?? 'No disponible' }}</div>
 
-      <div><strong>Tipo de Sangre:</strong> {{ $persona->tipo_sangre }}</div>
+      <!-- Provincia de Nacimiento -->
+      <div><strong>Provincia de Nacimiento:</strong> {{ optional($persona->informacionNacimiento)->provincia_nacimiento ?? 'No disponible' }}</div>
+
+      <!-- Cantón de Nacimiento -->
+      <div><strong>Cantón de Nacimiento:</strong> {{ optional($persona->informacionNacimiento)->canton_nacimiento ?? 'No disponible' }}</div>
+
+      <div><strong>Posee Discapacidad:</strong> {{ $persona->informacionMedica->posee_discapacidad ? 'Sí' : 'No' }}</div>
+      <div><strong>Detalle Discapacidad:</strong> {{ optional($persona->informacionMedica)->discapacidad_detalle ?? 'Ninguna' }}</div>
+
+      <div><strong>Posee Alergia:</strong> {{ $persona->informacionMedica->posee_alergia ? 'Sí' : 'No' }}</div>
+      <div><strong>Detalle Alergia:</strong> {{ optional($persona->informacionMedica)->alergia_detalle ?? 'Ninguna' }}</div>
+
+      <!-- Tipo de Sangre -->
+      <div><strong>Tipo de Sangre:</strong> {{ optional($persona->informacionMedica)->tipo_sangre ?? 'No disponible' }}</div>
+
       <div><strong>Correo:</strong> {{ $persona->correo }}</div>
 
-      <div><strong>Nombre Contacto Emergencia:</strong> {{ $persona->contacto_emergencia_nombre ?? ' ' }}</div>
-      <div><strong>Parentesco Contacto Emergencia:</strong> {{ $persona->contacto_emergencia_parentesco ?? ' ' }}</div>
-      <div><strong>Teléfono Convencional (Emergencia):</strong> {{ $persona->contacto_emergencia_convencional ?? ' ' }}</div>
-      <div><strong>Celular (Emergencia):</strong> {{ $persona->contacto_emergencia_celular ?? ' ' }}</div>
+      <!-- Nombre Contacto Emergencia -->
+      <div><strong>Nombre Contacto Emergencia:</strong> {{ optional($persona->contactoEmergencia)->nombre ?? 'No disponible' }}</div>
+      <div><strong>Parentesco Contacto Emergencia:</strong> {{ optional($persona->contactoEmergencia)->parentesco ?? 'No disponible' }}</div>
+      <div><strong>Teléfono Convencional (Emergencia):</strong> {{ optional($persona->contactoEmergencia)->telefono_convencional ?? 'No disponible' }}</div>
+      <div><strong>Celular (Emergencia):</strong> {{ optional($persona->contactoEmergencia)->telefono_celular ?? 'No disponible' }}</div>
 
-      <div><strong>Teléfono Convencional:</strong> {{ $persona->telefono_convencional ?? ' ' }}</div>
-      <div><strong>Teléfono Celular:</strong> {{ $persona->telefono_celular ?? ' ' }}</div>
+      <!-- Teléfonos de la persona -->
+      <div><strong>Teléfono Convencional:</strong> {{ optional($persona->informacionContacto)->telefono_convencional ?? 'No disponible' }}</div>
+      <div><strong>Teléfono Celular:</strong> {{ optional($persona->informacionContacto)->telefono_celular ?? 'No disponible' }}</div>
 
-      <div class="col-span-2"><strong>Última Empresa:</strong> {{ $persona->ultima_empresa }}</div>
-      <a href="{{ route('persona.edit', $persona->id) }}">
+      <div class="col-span-2"><strong>Última Empresa:</strong> {{ optional($persona->informacionLaboral)->ultima_empresa ?? 'No disponible' }}</div> <a href="{{ route('persona.edit', $persona->id) }}">
         <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow-sm">
           Editar
         </button>
