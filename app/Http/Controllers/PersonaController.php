@@ -133,7 +133,7 @@ class PersonaController extends Controller
         $persona->informacionLaboral()->create([
             'ultima_empresa' => $validatedData['ultima_empresa'],
         ]);
-    
+
         // Redireccionar a crear formación con el ID de la persona
         return redirect('/formacion/create')->with('persona_id', $persona->id);
     }
@@ -309,7 +309,7 @@ class PersonaController extends Controller
             ['persona_id' => $persona->id],
             ['ultima_empresa' => $validatedData['ultima_empresa']]
         );
-      
+
 
         return redirect()->route('persona.show', $persona->id)
             ->with('success', 'Persona actualizada correctamente');
@@ -318,31 +318,42 @@ class PersonaController extends Controller
 
     //genera el pdf
     public function generatePdf($id)
-    {
-        $persona = Persona::with([
-            'informacionNacimiento',
-            'direccionDomicilio',
-            'informacionMedica',
-            'informacionContacto',
-            'contactoEmergencia',
-            'informacionLaboral'
-        ])->findOrFail($id);
-        
+{
+    $persona = Persona::with([
+        'informacionNacimiento',
+        'direccionDomicilio',
+        'informacionMedica',
+        'informacionContacto',
+        'contactoEmergencia',
+        'informacionLaboral',
+        'formacion',
+        'proyectos_persona' => function ($query) {
+            $query->with('proyecto')
+                ->orderBy('fecha_ingreso', 'desc');
+        },
+        'cuentaBancaria'
+    ])->findOrFail($id);
 
-        $pdf = PDF::loadView('persona.pdf', compact('persona'));
+    // Aquí obtienes el proyecto actual (igual que en show)
+    $proyectoActual = $persona->proyectos_persona
+        ->where('fecha_salida', null)
+        ->first();
 
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->setOptions([
-            'dpi' => 96,
-            'defaultFont' => 'DejaVu Sans',
-            'isHtml5ParserEnabled' => true,
-            'isPhpEnabled' => true,
-            'isFontSubsettingEnabled' => true,
-            'isRemoteEnabled' => true,
-        ]);
+    // Ahora pasas las dos variables a la vista del PDF
+    $pdf = PDF::loadView('persona.pdf', compact('persona', 'proyectoActual'));
 
-        $filename = 'persona_' . $persona->cedula_pasaporte . '_' . date('Y-m-d') . '.pdf';
+    $pdf->setPaper('A4', 'portrait');
+    $pdf->setOptions([
+        'dpi' => 96,
+        'defaultFont' => 'DejaVu Sans',
+        'isHtml5ParserEnabled' => true,
+        'isPhpEnabled' => true,
+        'isFontSubsettingEnabled' => true,
+        'isRemoteEnabled' => true,
+    ]);
 
-        return $pdf->stream($filename);
-    }
+    $filename = 'persona_' . $persona->cedula_pasaporte . '_' . date('Y-m-d') . '.pdf';
+
+    return $pdf->stream($filename);
+}
 }

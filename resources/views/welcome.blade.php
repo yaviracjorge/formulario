@@ -7,6 +7,7 @@
       position: relative;
       overflow: hidden; /* Para que el pseudo no sobresalga */
     }
+    
     .bg-blur::before {
       content: "";
       position: absolute;

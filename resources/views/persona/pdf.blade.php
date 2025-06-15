@@ -170,113 +170,113 @@
 <body>
     <div class="container">
         <!-- Header -->
-<div class="header">
-    <h1>FICHA PERSONAL</h1>
-   
-</div>
+        <div class="header">
+            <h1>FICHA PERSONAL</h1>
+
+        </div>
 
         <!-- Información General -->
-     <table class="section-table">
-    <thead>
-        <tr>
-            <th colspan="4" class="section-header">Información General</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="field-label" style="width: 11%;">Número de Cédula/Pasaporte</td>
-            <td class="field-value" style="width: 11%;">{{ $persona->cedula_pasaporte }}</td>
-            <td class="field-label" style="width: 11%;">RUC</td>
-            <td class="field-value" style="width: 11%;">{{ $persona->ruc ?? '' }}</td>
-        </tr>
+        <table class="section-table">
+            <thead>
+                <tr>
+                    <th colspan="4" class="section-header">Información General</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="field-label" style="width: 11%;">Número de Cédula/Pasaporte</td>
+                    <td class="field-value" style="width: 11%;">{{ $persona->cedula_pasaporte }}</td>
+                    <td class="field-label" style="width: 11%;">RUC</td>
+                    <td class="field-value" style="width: 11%;">{{ $persona->ruc ?? '' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Apellidos</td>
-            <td class="field-value">{{ $persona->apellidos }}</td>
-            <td class="field-label">Nombres</td>
-            <td class="field-value">{{ $persona->nombres }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Apellidos</td>
+                    <td class="field-value">{{ $persona->apellidos }}</td>
+                    <td class="field-label">Nombres</td>
+                    <td class="field-value">{{ $persona->nombres }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Última lugar donde trabajó</td>
-            <td class="field-value" colspan="3">{{ $persona->informacionLaboral->ultima_empresa ?? '' }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Última lugar donde trabajó</td>
+                    <td class="field-value" colspan="3">{{ $persona->informacionLaboral->ultima_empresa ?? '' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Teléfono Convencional</td>
-            <td class="field-value">{{ $persona->informacionContacto->telefono_convencional ?? '' }}</td>
-            <td class="field-label">Teléfono Celular</td>
-            <td class="field-value">{{ $persona->informacionContacto->telefono_celular ?? '' }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Teléfono Convencional</td>
+                    <td class="field-value">{{ $persona->informacionContacto->telefono_convencional ?? '' }}</td>
+                    <td class="field-label">Teléfono Celular</td>
+                    <td class="field-value">{{ $persona->informacionContacto->telefono_celular ?? '' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Número de Hijos</td>
-            <td class="field-value">{{ $persona->num_hijos ?? '0' }}</td>
-            <td class="field-label">Estado Civil</td>
-            <td class="field-value">{{ $persona->estado_civil ?? 'SOLTERA/O' }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Número de Hijos</td>
+                    <td class="field-value">{{ $persona->num_hijos ?? '0' }}</td>
+                    <td class="field-label">Estado Civil</td>
+                    <td class="field-value">{{ $persona->estado_civil ?? 'SOLTERA/O' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Restricción alimentaria</td>
-            <td class="field-value" colspan="3">{{ $persona->informacionMedica->restriccion_alimentaria_detalle ?? 'NINGUNA' }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Restricción alimentaria</td>
+                    <td class="field-value" colspan="3">{{ $persona->informacionMedica->restriccion_alimentaria_detalle ?? 'NINGUNA' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Dirección de domicilio</td>
-            <td class="field-value" colspan="3">{{ $persona->direccionDomicilio->direccion_completa }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Dirección de domicilio</td>
+                    <td class="field-value" colspan="3">{{ $persona->direccionDomicilio->direccion_completa }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Fecha de Nacimiento</td>
-            <td class="field-value" colspan="3">{{ $persona->fecha_nacimiento->format('Y-m-d') }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Fecha de Nacimiento</td>
+                    <td class="field-value" colspan="3">{{ $persona->fecha_nacimiento->format('Y-m-d') }}</td>
+                </tr>
 
-        <tr class="birth-place-row">
-            <td class="field-label">Lugar de Nacimiento</td>
-            <td class="field-label">País</td>
-            <td class="field-value">{{ $persona->informacionNacimiento->pais_nacimiento ?? '' }}</td>
-            <td class="field-label">Provincia</td>
-            <td class="field-value">{{ $persona->informacionNacimiento->provincia_nacimiento ?? '' }}</td>
-            <td class="field-label">Cantón</td>
-            <td class="field-value">{{ $persona->informacionNacimiento->canton_nacimiento ?? '' }}</td>
-        </tr>
+                <tr class="birth-place-row">
+                    <td class="field-label">Lugar de Nacimiento</td>
+                    <td class="field-label">País</td>
+                    <td class="field-value">{{ $persona->informacionNacimiento->pais_nacimiento ?? '' }}</td>
+                    <td class="field-label">Provincia</td>
+                    <td class="field-value">{{ $persona->informacionNacimiento->provincia_nacimiento ?? '' }}</td>
+                    <td class="field-label">Cantón</td>
+                    <td class="field-value">{{ $persona->informacionNacimiento->canton_nacimiento ?? '' }}</td>
+                </tr>
 
-        <tr class="health-row">
-            <td class="field-label">Posee alguna discapacidad</td>
-            <td class="field-value">{{ $persona->informacionMedica->posee_discapacidad ? 'SÍ' : 'NO' }}</td>
-            <td class="field-label">Especifique:</td>
-            <td class="field-value" colspan="5">{{ $persona->informacionMedica->discapacidad_detalle ?? '' }}</td>
-        </tr>
+                <tr class="health-row">
+                    <td class="field-label">Posee alguna discapacidad</td>
+                    <td class="field-value">{{ $persona->informacionMedica->posee_discapacidad ? 'SÍ' : 'NO' }}</td>
+                    <td class="field-label">Especifique:</td>
+                    <td class="field-value" colspan="5">{{ $persona->informacionMedica->discapacidad_detalle ?? '' }}</td>
+                </tr>
 
-        <tr class="health-row">
-            <td class="field-label">Posee alguna alergia</td>
-            <td class="field-value">{{ $persona->informacionMedica->posee_alergia ? 'SÍ' : 'NO' }}</td>
-            <td class="field-label">Especifique:</td>
-            <td class="field-value" colspan="5">{{ $persona->informacionMedica->alergia_detalle ?? '' }}</td>
-        </tr>
+                <tr class="health-row">
+                    <td class="field-label">Posee alguna alergia</td>
+                    <td class="field-value">{{ $persona->informacionMedica->posee_alergia ? 'SÍ' : 'NO' }}</td>
+                    <td class="field-label">Especifique:</td>
+                    <td class="field-value" colspan="5">{{ $persona->informacionMedica->alergia_detalle ?? '' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Tipo de Sangre</td>
-            <td class="field-value">{{ $persona->informacionMedica->tipo_sangre ?? '' }}</td>
-            <td class="field-label">Mail</td>
-            <td class="field-value" colspan="5">{{ $persona->correo }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Tipo de Sangre</td>
+                    <td class="field-value">{{ $persona->informacionMedica->tipo_sangre ?? '' }}</td>
+                    <td class="field-label">Mail</td>
+                    <td class="field-value" colspan="5">{{ $persona->correo }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Nombre de contacto en caso de emergencia</td>
-            <td class="field-value" colspan="2">{{ $persona->contactoEmergencia->nombre ?? '' }}</td>
-            <td class="field-label">Parentesco</td>
-            <td class="field-value" colspan="3">{{ $persona->contactoEmergencia->parentesco ?? '' }}</td>
-        </tr>
+                <tr>
+                    <td class="field-label">Nombre de contacto en caso de emergencia</td>
+                    <td class="field-value" colspan="2">{{ $persona->contactoEmergencia->nombre ?? '' }}</td>
+                    <td class="field-label">Parentesco</td>
+                    <td class="field-value" colspan="3">{{ $persona->contactoEmergencia->parentesco ?? '' }}</td>
+                </tr>
 
-        <tr>
-            <td class="field-label">Teléfono Convencional</td>
-            <td class="field-value">{{ $persona->contactoEmergencia->telefono_convencional ?? '' }}</td>
-            <td class="field-label">Celular</td>
-            <td class="field-value" colspan="4">{{ $persona->contactoEmergencia->telefono_celular ?? '' }}</td>
-        </tr>
-    </tbody>
-</table>
+                <tr>
+                    <td class="field-label">Teléfono Convencional</td>
+                    <td class="field-value">{{ $persona->contactoEmergencia->telefono_convencional ?? '' }}</td>
+                    <td class="field-label">Celular</td>
+                    <td class="field-value" colspan="4">{{ $persona->contactoEmergencia->telefono_celular ?? '' }}</td>
+                </tr>
+            </tbody>
+        </table>
 
         <!-- Formación Académica -->
         <div class="work-section">
@@ -301,58 +301,60 @@
 
 
         <!-- Información Laboral -->
-        <div class="work-section">
-            <table class="work-table">
-                <thead>
-                    <tr>
-                        <th colspan="4" class="education-header">PROYECTO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="field-label" style="width: 20%;">Fecha de Ingreso al ACF</td>
-                        <td class="field-value" style="width: 30%;">{{ $proyectoActual->fecha_ingreso ?? '' }}</td>
-                        <td class="field-label" style="width: 15%;">Cargo</td>
-                        <td class="field-value" style="width: 35%;">{{ $proyectoActual->cargo ?? '' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-label">Tiempo dedicación</td>
-                        <td class="field-value" colspan="3">{{ $proyectoActual->tiempo_dedicacion ?? '' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-label">Proyecto</td>
-                        <td class="field-value">{{ $proyectoActual->proyecto->nombre_proyecto ?? '' }}</td>
-                        <td class="field-label">Lugar</td>
-                        <td class="field-value">{{ $proyectoActual->sucursal ?? '' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-label">Lugar donde Sufraga</td>
-                        <td class="field-value" colspan="3">{{ $proyectoActual->lugar_sufragio ?? '' }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Información Bancaria -->
-        <table class="section-table">
+@if($proyectoActual)
+    <div class="work-section">
+        <table class="work-table">
             <thead>
                 <tr>
-                    <th colspan="4" class="banking-header">INFORMACIÓN DE LA ENTIDAD BANCARIA DONDE MANTIENE UNA CUENTA ACTIVA</th>
+                    <th colspan="4" class="education-header">PROYECTO</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="field-label" style="width: 25%;">Institución Bancaria</td>
-                    <td class="field-value" style="width: 25%;">{{ $persona->cuentaBancaria->banco ?? '' }}</td>
-                    <td class="field-label" style="width: 25%;">Tipo de Cuenta</td>
-                    <td class="field-value" style="width: 25%;">{{ $persona->cuentaBancaria->tipo_cuenta ?? '' }}</td>
+                    <td class="field-label" style="width: 20%;">Fecha de Ingreso al ACF</td>
+                    <td class="field-value" style="width: 30%;">{{ $proyectoActual->fecha_ingreso ?? '' }}</td>
+                    <td class="field-label" style="width: 15%;">Cargo</td>
+                    <td class="field-value" style="width: 35%;">{{ $proyectoActual->cargo ?? '' }}</td>
                 </tr>
                 <tr>
-                    <td class="field-label">Numero de Cuenta</td>
-                    <td class="field-value" colspan="3">{{ $persona->cuentaBancaria->numero_cuenta ?? '' }}</td>
+                    <td class="field-label">Tiempo dedicación</td>
+                    <td class="field-value" colspan="3">{{ $proyectoActual->tiempo_dedicacion ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Proyecto</td>
+                    <td class="field-value">{{ $proyectoActual->proyecto->nombre_proyecto ?? '' }}</td>
+                    <td class="field-label">Lugar</td>
+                    <td class="field-value">{{ $proyectoActual->sucursal ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Lugar donde Sufraga</td>
+                    <td class="field-value" colspan="3">{{ $proyectoActual->lugar_sufragio ?? '' }}</td>
                 </tr>
             </tbody>
         </table>
+    </div>
+@endif
+
+    <!-- Información Bancaria -->
+    <table class="section-table">
+        <thead>
+            <tr>
+                <th colspan="4" class="banking-header">INFORMACIÓN DE LA ENTIDAD BANCARIA DONDE MANTIENE UNA CUENTA ACTIVA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="field-label" style="width: 25%;">Institución Bancaria</td>
+                <td class="field-value" style="width: 25%;">{{ $persona->cuentaBancaria->banco ?? '' }}</td>
+                <td class="field-label" style="width: 25%;">Tipo de Cuenta</td>
+                <td class="field-value" style="width: 25%;">{{ $persona->cuentaBancaria->tipo_cuenta ?? '' }}</td>
+            </tr>
+            <tr>
+                <td class="field-label">Numero de Cuenta</td>
+                <td class="field-value" colspan="3">{{ $persona->cuentaBancaria->numero_cuenta ?? '' }}</td>
+            </tr>
+        </tbody>
+    </table>
     </div>
 
 </body>
